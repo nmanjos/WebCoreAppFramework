@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logger\DefaultSessionIdAccessor.cs" />
+    <Compile Remove="Logger\ICorrelationIdAccessor.cs" />
+    <Compile Remove="Logger\ILogger.cs" />
+    <Compile Remove="Logger\ILoggerProvider.cs" />
+    <Compile Remove="Logger\LogHeaderMiddleware.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CorrelationId" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

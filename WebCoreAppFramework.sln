@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCoreAppFramework", "WebCoreAppFramework\WebCoreAppFramework.csproj", "{9019C509-87F0-43BA-92AD-82E39310BBFC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreLogger", "NetCoreLogger\NetCoreLogger.csproj", "{FAA9BC80-DC7A-435A-B9E9-16181022CFD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9019C509-87F0-43BA-92AD-82E39310BBFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9019C509-87F0-43BA-92AD-82E39310BBFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9019C509-87F0-43BA-92AD-82E39310BBFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9019C509-87F0-43BA-92AD-82E39310BBFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA9BC80-DC7A-435A-B9E9-16181022CFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA9BC80-DC7A-435A-B9E9-16181022CFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA9BC80-DC7A-435A-B9E9-16181022CFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA9BC80-DC7A-435A-B9E9-16181022CFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1F99FDA-20EC-43A4-BEAF-9C49BD6565CD}
+	EndGlobalSection
+EndGlobal
