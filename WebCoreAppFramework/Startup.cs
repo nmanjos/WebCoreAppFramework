@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using CorrelationId;
 using Microsoft.Extensions.Logging;
 using WebCoreAppFramework.Models;
-using WebCoreAppFramework.Service;
+using WebCoreAppFramework.Services;
 using WebCoreAppFramework.Options;
 
 namespace WebCoreAppFramework

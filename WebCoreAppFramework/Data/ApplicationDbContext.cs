@@ -13,7 +13,7 @@ namespace WebCoreAppFramework.Data
         ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
         ApplicationRoleClaim, ApplicationUserToken>
     {
-        
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -48,8 +48,10 @@ namespace WebCoreAppFramework.Data
                 b.HasMany(e => e.UserRoles)
                     .WithOne(e => e.User)
                     .HasForeignKey(ur => ur.UserId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             });
+
 
             modelBuilder.Entity<ApplicationRole>(b =>
             {
@@ -57,6 +59,7 @@ namespace WebCoreAppFramework.Data
                 b.HasMany(e => e.UserRoles)
                     .WithOne(e => e.Role)
                     .HasForeignKey(ur => ur.RoleId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
                 // Each Role can have many associated RoleClaims
@@ -65,8 +68,36 @@ namespace WebCoreAppFramework.Data
                     .HasForeignKey(rc => rc.RoleId)
                     .IsRequired();
             });
+            modelBuilder.Entity<ApplicationUserRole>().HasKey(ur => new { ur.UserId, ur.TenantId });
+            modelBuilder.Entity<ApplicationUserRole>()
+            .HasOne<ApplicationUser>(u => u.User)
+            .WithMany(s => s.UserRoles)
+            .HasForeignKey(u => u.UserId);
+
+            modelBuilder.Entity<ApplicationUserRole>()
+            .HasOne<ApplicationTenant>(u => u.Tenant)
+            .WithMany(s => s.Users)
+            .HasForeignKey(u => u.TenantId);
+
+            modelBuilder.Entity<ApplicationUserRole>()
+                        .HasOne<ApplicationRole>(u => u.Role)
+                        .WithMany(s => s.UserRoles)
+                        .HasForeignKey(u => u.RoleId);
+
+            modelBuilder.Entity<CountryLanguage>().HasKey(cl => new { cl.CountryId, cl.LanguageId });
+
+
         }
 
-        //public DbSet<WebCoreAppFramework.ViewModels.UserIndexViewModel> UserIndexViewModel { get; set; }
+        public DbSet<About> Abouts { get; set; }
+        public DbSet<ApplicationTenant> Tenants { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<PostalCode> PostalCodes { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<GeoLocation> GeoLocations { get; set; }
+        public DbSet<District> Districs { get; set; }
+        public DbSet<County> Counties { get; set; }
+        public DbSet<Language> Languages { get; set; }
+
     }
 }

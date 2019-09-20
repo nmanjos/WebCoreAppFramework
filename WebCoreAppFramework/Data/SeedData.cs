@@ -8,6 +8,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WebCoreAppFramework.Models;
+using WebCoreAppFramework.Options;
+using WebCoreAppFramework.Services;
 
 namespace WebCoreAppFramework.Data
 {
@@ -18,6 +20,30 @@ namespace WebCoreAppFramework.Data
                               UserManager<ApplicationUser> userManager,
                               RoleManager<ApplicationRole> roleManager, AppSetupOptions options, ILogger logger)
         {
+            if (context is null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (userManager is null)
+            {
+                throw new ArgumentNullException(nameof(userManager));
+            }
+
+            if (roleManager is null)
+            {
+                throw new ArgumentNullException(nameof(roleManager));
+            }
+
+            if (options is null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (logger is null)
+            {
+                throw new ArgumentNullException(nameof(logger));
+            }
 
             context.Database.EnsureCreated();
 

@@ -1,4 +1,4 @@
-﻿namespace WebCoreAppFramework.Data
+﻿namespace WebCoreAppFramework.Options
 {
     public class AppSetupOptions
     {
