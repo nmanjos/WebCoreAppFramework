@@ -10,8 +10,8 @@ using WebCoreAppFramework.Data;
 namespace WebCoreAppFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190919141629_UpdatedEntities")]
-    partial class UpdatedEntities
+    [Migration("20190920155715_NewEntities")]
+    partial class NewEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,7 +141,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Tenants");
+                    b.ToTable("ApplicationTenants");
                 });
 
             modelBuilder.Entity("WebCoreAppFramework.Models.ApplicationUser", b =>

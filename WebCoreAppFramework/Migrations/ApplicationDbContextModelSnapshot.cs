@@ -139,7 +139,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Tenants");
+                    b.ToTable("ApplicationTenants");
                 });
 
             modelBuilder.Entity("WebCoreAppFramework.Models.ApplicationUser", b =>

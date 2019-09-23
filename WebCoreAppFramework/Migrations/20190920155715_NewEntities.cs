@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebCoreAppFramework.Migrations
 {
-    public partial class UpdatedEntities : Migration
+    public partial class NewEntities : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -261,6 +261,44 @@ namespace WebCoreAppFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApplicationTenants",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false),
+                    ManagerId = table.Column<string>(nullable: false),
+                    AboutId = table.Column<long>(nullable: true),
+                    LogoURL = table.Column<string>(nullable: true),
+                    AddressId = table.Column<long>(nullable: true),
+                    EmailAddress = table.Column<string>(nullable: true),
+                    WebSite = table.Column<string>(nullable: true),
+                    PhoneContact = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationTenants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApplicationTenants_Abouts_AboutId",
+                        column: x => x.AboutId,
+                        principalTable: "Abouts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApplicationTenants_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApplicationTenants_AspNetUsers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -322,44 +360,6 @@ namespace WebCoreAppFramework.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tenants",
-                columns: table => new
-                {
-                    Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: false),
-                    ManagerId = table.Column<string>(nullable: false),
-                    AboutId = table.Column<long>(nullable: true),
-                    LogoURL = table.Column<string>(nullable: true),
-                    AddressId = table.Column<long>(nullable: true),
-                    EmailAddress = table.Column<string>(nullable: true),
-                    WebSite = table.Column<string>(nullable: true),
-                    PhoneContact = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tenants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tenants_Abouts_AboutId",
-                        column: x => x.AboutId,
-                        principalTable: "Abouts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tenants_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tenants_AspNetUsers_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
@@ -378,9 +378,9 @@ namespace WebCoreAppFramework.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_Tenants_TenantId",
+                        name: "FK_AspNetUserRoles_ApplicationTenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenants",
+                        principalTable: "ApplicationTenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -405,6 +405,21 @@ namespace WebCoreAppFramework.Migrations
                 name: "IX_Addresses_PostalCodeId",
                 table: "Addresses",
                 column: "PostalCodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationTenants_AboutId",
+                table: "ApplicationTenants",
+                column: "AboutId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationTenants_AddressId",
+                table: "ApplicationTenants",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationTenants_ManagerId",
+                table: "ApplicationTenants",
+                column: "ManagerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -479,21 +494,6 @@ namespace WebCoreAppFramework.Migrations
                 name: "IX_PostalCodes_CountyId",
                 table: "PostalCodes",
                 column: "CountyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tenants_AboutId",
-                table: "Tenants",
-                column: "AboutId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tenants_AddressId",
-                table: "Tenants",
-                column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tenants_ManagerId",
-                table: "Tenants",
-                column: "ManagerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -520,7 +520,7 @@ namespace WebCoreAppFramework.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Tenants");
+                name: "ApplicationTenants");
 
             migrationBuilder.DropTable(
                 name: "Abouts");

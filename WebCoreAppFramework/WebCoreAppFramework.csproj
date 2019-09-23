@@ -6,6 +6,15 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Migrations\20190919141629_UpdatedEntities.cs" />
+    <Compile Remove="Migrations\20190919141629_UpdatedEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190920155306_NewEntities.cs" />
+    <Compile Remove="Migrations\20190920155306_NewEntities.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="CorrelationId" Version="2.1.0" />

@@ -17,7 +17,7 @@ namespace WebCoreAppFramework.Data
     {
 
         public static async Task Initialize(ApplicationDbContext context,
-                              UserManager<ApplicationUser> userManager,
+                              AppUserManager userManager,
                               RoleManager<ApplicationRole> roleManager, AppSetupOptions options, ILogger logger)
         {
             if (context is null)
@@ -68,23 +68,32 @@ namespace WebCoreAppFramework.Data
                     await roleManager.CreateAsync(new ApplicationRole { Name = options.NormalRoleName });
                 }
 
-                if (await userManager.FindByNameAsync(options.AdminUserName) == null)
-                {
-                    var user = new ApplicationUser
-                    {
-                        UserName = options.AdminUserName,
-                        Email = options.AdminUserName,
+                ApplicationTenant tenant = await userManager.FindTenantByNameAsync(options.DefaultTenantName);
 
-                    };
+                if (tenant == null)
+                {
+                    tenant.Name = options.DefaultTenantName;
+
+                }
+
+                ApplicationUser user = await userManager.FindByNameAsync(options.AdminUserName);
+                
+                if (user == null)
+                {
+                    user.UserName = options.AdminUserName;
+                    user.Email = options.AdminUserName;
+
                     var result = await userManager.CreateAsync(user, options.AdminUserPass);
                     if (result.Succeeded)
                     {
-                        
-                        await userManager.AddToRoleAsync(user, options.AdminRoleName);
+                        await userManager.AddToRoleAsync(user, tenant, options.AdminRoleName);
                     }
                 }
 
-                
+               
+
+
+
 
             }
             catch (Exception ex)

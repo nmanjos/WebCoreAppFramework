@@ -49,20 +49,23 @@ namespace WebCoreAppFramework
             services.AddIdentity<ApplicationUser, ApplicationRole>(
                  options => options.Stores.MaxLengthForKeys = 128)
                  .AddEntityFrameworkStores<ApplicationDbContext>()
+                 .AddUserManager<AppUserManager>()
                  .AddDefaultUI(UIFramework.Bootstrap4)
                  .AddDefaultTokenProviders();
 
             services.Configure<AppSetupOptions>(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddSingleton<IAppSetupOptions>(Configuration.GetSection("AppSetupOptions").Get<AppSetupOptions>());
             services.AddTransient<IEmailService, EmailService>();
+            services.AddSingleton<IAppUserManager, AppUserManager>();
         }
 
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context,
-                                  UserManager<ApplicationUser> userManager,
+                                  AppUserManager userManager,
                                   RoleManager<ApplicationRole> roleManager)
         {
             if (env.IsDevelopment())
@@ -99,8 +102,8 @@ namespace WebCoreAppFramework
 
             var options = new AppSetupOptions();
             Configuration.GetSection(nameof(AppSetupOptions)).Bind(options);
-
-            SeedData.Initialize(context, userManager, roleManager, options, _logger).Wait();
+            
+            SeedData.Initialize(context, userManager , roleManager, options, _logger).Wait();
 
 
         }
