@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WebCoreAppFramework.Authorization;
 using WebCoreAppFramework.Models;
 using WebCoreAppFramework.Options;
 using WebCoreAppFramework.Services;
@@ -20,6 +21,7 @@ namespace WebCoreAppFramework.Data
                               AppUserManager userManager,
                               RoleManager<ApplicationRole> roleManager, AppSetupOptions options, ILogger logger)
         {
+            logger.LogInformation("Data Seeder Started");
             if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -46,13 +48,9 @@ namespace WebCoreAppFramework.Data
             }
 
             context.Database.EnsureCreated();
-
-            
-
-
-
             try
             {
+
                 if (await roleManager.FindByNameAsync(options.AdminRoleName) == null)
                 {
                     await roleManager.CreateAsync(new ApplicationRole { Name = options.AdminRoleName });
@@ -68,37 +66,29 @@ namespace WebCoreAppFramework.Data
                     await roleManager.CreateAsync(new ApplicationRole { Name = options.NormalRoleName });
                 }
 
-                ApplicationTenant tenant = await userManager.FindTenantByNameAsync(options.DefaultTenantName);
-
-                if (tenant == null)
-                {
-                    tenant.Name = options.DefaultTenantName;
-
-                }
+                
 
                 ApplicationUser user = await userManager.FindByNameAsync(options.AdminUserName);
-                
+
                 if (user == null)
                 {
                     user.UserName = options.AdminUserName;
                     user.Email = options.AdminUserName;
 
                     var result = await userManager.CreateAsync(user, options.AdminUserPass);
-                    if (result.Succeeded)
+
+                    ApplicationTenant tenant = userManager.FindTenantByName(options.DefaultTenantName);
+                    logger.LogInformation($"tenant is null?: {tenant == null}");
+
+                    var tenantresult = await userManager.CreateTenantAsync(options.DefaultTenantName, user);
+                    if (result.Succeeded && tenantresult.Succeeded)
                     {
                         await userManager.AddToRoleAsync(user, tenant, options.AdminRoleName);
                     }
                 }
-
-               
-
-
-
-
             }
             catch (Exception ex)
             {
-
                 logger.LogError(ex, "An error occurred while seeding user.");
                 //throw;
             }

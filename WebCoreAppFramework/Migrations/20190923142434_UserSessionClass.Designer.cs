@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCoreAppFramework.Data;
 
 namespace WebCoreAppFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190923142434_UserSessionClass")]
+    partial class UserSessionClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,7 +340,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.Property<long?>("GeoLocationId");
 
-                    b.Property<long>("TenantId");
+                    b.Property<long?>("TenantId");
 
                     b.HasKey("Id");
 
@@ -547,8 +549,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.HasOne("WebCoreAppFramework.Models.ApplicationTenant", "Tenant")
                         .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TenantId");
                 });
 
             modelBuilder.Entity("WebCoreAppFramework.Models.District", b =>

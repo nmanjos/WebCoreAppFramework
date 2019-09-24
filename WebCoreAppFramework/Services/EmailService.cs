@@ -1,7 +1,9 @@
 ﻿using MailKit.Net.Pop3;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 using System;
@@ -16,20 +18,20 @@ namespace WebCoreAppFramework.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IEmailConfiguration _emailConfiguration;
+        public EmailConfiguration _emailConfiguration {get; set;}
         private readonly IHostingEnvironment _env;
         private readonly ILogger logger;
 
-        public EmailService(IEmailConfiguration emailConfiguration,
+        public EmailService(IOptions<EmailConfiguration> emailConfiguration,
             IHostingEnvironment env, ILogger<EmailService> Logger)
         {
-            _emailConfiguration = emailConfiguration;
+            _emailConfiguration = emailConfiguration.Value;
             _env = env;
             logger = Logger;
             logger.LogInformation("EmailService Initialized");
         }
 
-        public async Task<List<EmailMessage>> ReceiveAsync(int maxCount = 10)
+        public async Task<List<EmailMessage>> ReceiveEmailAsync(int maxCount = 10)
         {
             using (var emailClient = new Pop3Client())
             {
@@ -59,7 +61,16 @@ namespace WebCoreAppFramework.Services
             }
         }
 
-        public async Task SendAsync(EmailMessage emailMessage)
+        public async Task SendEmailAsync(string address, string subject, string body)
+        {
+            EmailMessage emailMessage = new EmailMessage();
+            emailMessage.ToAddresses.Add(new EmailAddress { Address = address });
+            emailMessage.Subject = subject;
+            emailMessage.Content = body;
+            await this.SendEmailAsync(emailMessage);
+
+        }
+        public async Task SendEmailAsync(EmailMessage emailMessage)
         {
             try
             {
@@ -105,7 +116,7 @@ namespace WebCoreAppFramework.Services
             }
             catch (System.Exception ex)
             {
-                logger.LogError(ex,ex.Message);
+                logger.LogError(ex, ex.Message);
                 throw new InvalidOperationException(ex.Message);
             }
 

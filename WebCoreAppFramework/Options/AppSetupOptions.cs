@@ -10,5 +10,7 @@
         public string AdminUserPass { get; set; }
 
         public string DefaultTenantName { get; set; }
+
+ 
     }
 }

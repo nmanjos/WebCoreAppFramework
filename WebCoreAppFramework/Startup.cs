@@ -18,6 +18,8 @@ using Microsoft.Extensions.Logging;
 using WebCoreAppFramework.Models;
 using WebCoreAppFramework.Services;
 using WebCoreAppFramework.Options;
+using WebCoreAppFramework.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebCoreAppFramework
 {
@@ -46,19 +48,29 @@ namespace WebCoreAppFramework
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<ApplicationUser, ApplicationRole>(
-                 options => options.Stores.MaxLengthForKeys = 128)
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Stores.MaxLengthForKeys = 128;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+            })
+
                  .AddEntityFrameworkStores<ApplicationDbContext>()
                  .AddUserManager<AppUserManager>()
                  .AddDefaultUI(UIFramework.Bootstrap4)
                  .AddDefaultTokenProviders();
+                 
 
             services.Configure<AppSetupOptions>(Configuration);
+            PermissionsSeeder.Initialize(services);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
-            services.AddSingleton<IAppSetupOptions>(Configuration.GetSection("AppSetupOptions").Get<AppSetupOptions>());
+            services.Configure<EmailConfiguration>(Configuration);
+            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
             services.AddTransient<IEmailService, EmailService>();
-            services.AddSingleton<IAppUserManager, AppUserManager>();
+            services.AddTransient<IAppUserManager, AppUserManager>();
+
+            
         }
 
 
@@ -86,8 +98,9 @@ namespace WebCoreAppFramework
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-            app.UseCorrelationId(new CorrelationIdOptions
+            app.UseCorrelationId( new CorrelationIdOptions
             {
+
                 Header = "X-Correlation-ID",
                 UseGuidForCorrelationId = true,
                 UpdateTraceIdentifier = false
@@ -102,8 +115,8 @@ namespace WebCoreAppFramework
 
             var options = new AppSetupOptions();
             Configuration.GetSection(nameof(AppSetupOptions)).Bind(options);
-            
-            SeedData.Initialize(context, userManager , roleManager, options, _logger).Wait();
+
+            SeedData.Initialize(context, userManager, roleManager, options, _logger).Wait();
 
 
         }

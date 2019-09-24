@@ -13,6 +13,7 @@ namespace WebCoreAppFramework.Models
         public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
 
+        public CurrentUserSession CurrentSession {get; set;}
         public Address Address { get; set; }
         public string FiscalNumber  { get; set; }
         public Language Language { get; set; }

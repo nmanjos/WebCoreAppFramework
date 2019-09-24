@@ -8,7 +8,8 @@ namespace WebCoreAppFramework.Services
 {
     public interface IEmailService
     {
-        Task SendAsync(EmailMessage emailMessage);
-        Task<List<EmailMessage>> ReceiveAsync(int maxCount = 10);
+        Task SendEmailAsync(string address, string subject, string body);
+        Task SendEmailAsync(EmailMessage emailMessage);
+        Task<List<EmailMessage>> ReceiveEmailAsync(int maxCount = 10);
     }
 }

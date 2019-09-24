@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using WebCoreAppFramework.Models;
+using WebCoreAppFramework.Services;
 
 namespace WebCoreAppFramework.Areas.Identity.Pages.Account
 {
@@ -18,17 +19,21 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private AppUserManager userMAnager;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, AppUserManager UserMAnager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
+            userMAnager = UserMAnager;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        public IList<ApplicationTenant> Tenants { get; set; }
 
         public string ReturnUrl { get; set; }
 
@@ -47,6 +52,9 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
+            [Display(Name = "Tenant Name")]
+            public string TenantName { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -63,6 +71,7 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+
             ReturnUrl = returnUrl;
         }
 
@@ -77,6 +86,7 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
+                    
                     _logger.LogInformation("User logged in.");
                     
                     return LocalRedirect(returnUrl);
