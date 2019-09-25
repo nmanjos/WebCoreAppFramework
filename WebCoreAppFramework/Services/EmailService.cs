@@ -8,6 +8,7 @@ using MimeKit;
 using MimeKit.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace WebCoreAppFramework.Services
 {
     public class EmailService : IEmailService
     {
-        public EmailConfiguration _emailConfiguration {get; set;}
+        private readonly EmailConfiguration _emailConfiguration;
         private readonly IHostingEnvironment _env;
         private readonly ILogger logger;
 
@@ -87,8 +88,15 @@ namespace WebCoreAppFramework.Services
                 if (emailMessage.CcAddresses.Any()) message.Cc.AddRange(emailMessage.CcAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
                 if (emailMessage.BccAddresses.Any()) message.Bcc.AddRange(emailMessage.BccAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
 
-                message.From.AddRange(emailMessage.FromAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
+                if (emailMessage.BccAddresses.Any())
+                {
 
+                    message.From.AddRange(emailMessage.FromAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
+                }
+                else
+                {
+                    message.From.Add(new MailboxAddress(_emailConfiguration.DefaultEmailName, _emailConfiguration.DefaultEmailAddress));
+                }
                 message.Subject = emailMessage.Subject;
                 //We will say we are sending HTML. But there are options for plaintext etc. 
                 message.Body = new TextPart(TextFormat.Html)
@@ -114,12 +122,11 @@ namespace WebCoreAppFramework.Services
                 }
 
             }
-            catch (System.Exception ex)
+            
+            catch (Exception ex)
             {
                 logger.LogError(ex, ex.Message);
-                throw new InvalidOperationException(ex.Message);
             }
-
         }
     }
 }

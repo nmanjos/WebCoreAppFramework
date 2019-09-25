@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WebCoreAppFramework.Authorization;
 using WebCoreAppFramework.Models;
@@ -54,6 +55,8 @@ namespace WebCoreAppFramework.Data
                 if (await roleManager.FindByNameAsync(options.AdminRoleName) == null)
                 {
                     await roleManager.CreateAsync(new ApplicationRole { Name = options.AdminRoleName });
+                    var adminRole = await roleManager.FindByNameAsync(options.AdminRoleName);
+                    await roleManager.AddClaimAsync(adminRole, new Claim(CustomClaimTypes.Permission, Permissions.AdminUser.Read));
                 }
 
                 if (await roleManager.FindByNameAsync(options.ManagerRoleName) == null)
@@ -72,17 +75,16 @@ namespace WebCoreAppFramework.Data
 
                 if (user == null)
                 {
+                    user = new ApplicationUser();
                     user.UserName = options.AdminUserName;
+                    user.EmailConfirmed = true;
                     user.Email = options.AdminUserName;
-
                     var result = await userManager.CreateAsync(user, options.AdminUserPass);
-
-                    ApplicationTenant tenant = userManager.FindTenantByName(options.DefaultTenantName);
-                    logger.LogInformation($"tenant is null?: {tenant == null}");
-
                     var tenantresult = await userManager.CreateTenantAsync(options.DefaultTenantName, user);
+                    
                     if (result.Succeeded && tenantresult.Succeeded)
                     {
+                        ApplicationTenant tenant = userManager.FindTenantByName(options.DefaultTenantName);
                         await userManager.AddToRoleAsync(user, tenant, options.AdminRoleName);
                     }
                 }

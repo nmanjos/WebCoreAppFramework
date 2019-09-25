@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebCoreAppFramework.Models;
 
 namespace WebCoreAppFramework.Authorization
 {
     internal class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
     {
-        UserManager<IdentityUser> _userManager;
-        RoleManager<IdentityRole> _roleManager;
+        UserManager<ApplicationUser> _userManager;
+        RoleManager<ApplicationRole> _roleManager;
 
-        public PermissionAuthorizationHandler(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public PermissionAuthorizationHandler(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;

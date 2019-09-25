@@ -16,5 +16,8 @@ namespace WebCoreAppFramework.Options
         int PopPort { get; }
         string PopUsername { get; }
         string PopPassword { get; }
+
+        string DefaultEmailName { get; set; }
+        string DefaultEmailAddress { get; set; }
     }
 }

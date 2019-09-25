@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using WebCoreAppFramework.Authorization;
 using WebCoreAppFramework.Services;
@@ -14,30 +15,17 @@ namespace WebCoreAppFramework.Authorization
         {
             services.AddAuthorization(perm =>
             {
-                var permissions = typeof(Permissions);
-
-                var sub_validator_types =
-                    permissions
-                    .Assembly
-                    .DefinedTypes
-                    .Where(x => x.IsAssignableFrom(permissions))
-                    
-                    .ToList();
-
-
-                //var sub_validator_types = permissions.GetFields();
-
-
-                foreach (var permission in sub_validator_types[0].DeclaredMembers)
+                foreach (var subPermission in typeof(Permissions).GetNestedTypes())
                 {
-                    
-                    perm.AddPolicy(permission.Name, builder =>
+                    foreach (var field in subPermission.GetFields())
                     {
-                        builder.AddRequirements(new PermissionRequirement(permission.Name));
-                    });
+                        string policy = field.GetValue(null).ToString();
+                        perm.AddPolicy(policy, builder =>
+                        {
+                            builder.AddRequirements(new PermissionRequirement(policy));
+                        });
+                    }
                 }
-
-           
             });
         }
     }

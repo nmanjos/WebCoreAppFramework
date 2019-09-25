@@ -2,7 +2,7 @@ namespace WebCoreAppFramework.Authorization
 {
     public static class Permissions
     {
-        public const string Global = "Global";
+        
         // this is the permitions class, each controler has a counterpart subclass here
         // each subclass has at least 4 standard permitions settings
         // this can be used to map Permitions to Users with the ApplicationRole/ApplicationRoleClaims list
