@@ -12,7 +12,7 @@ namespace WebCoreAppFramework.ViewModels
         [Key]
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public List<UserRolesView> UserRoles { get; set; }
+        public List<UserRolesViewModel> UserRoles { get; set; }
 
     }
 }

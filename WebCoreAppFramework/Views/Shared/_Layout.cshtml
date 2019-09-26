@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using WebCoreAppFramework.Authorization
 @inject SignInManager<ApplicationUser> SignInManager
 <!DOCTYPE html>
 <html>
@@ -34,14 +35,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="UserAdmin" asp-action="Index">UserAdmin</a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
                         @if (SignInManager.IsSignedIn(User))
                         {
+                            @if (User.Claims.FirstOrDefault(c => c.Value == Permissions.AdminUser.Read) != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="UserAdmin" asp-action="Index">UserAdmin</a>
+                                </li>
+                            }
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
                             </li>
