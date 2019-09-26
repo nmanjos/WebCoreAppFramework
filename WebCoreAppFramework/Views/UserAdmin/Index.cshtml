@@ -4,45 +4,49 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserRoles)
-            </th>
-            <th>
+<div class="row mx-md-n5">
+    <div class="col-9 px-md-5"><h1>Index</h1></div>
+    <div class="col-3 px-md-5 py-md-2"><a class="float-right btn btn-primary" asp-action="Create" role="button">Create New</a></div>
+</div>
+
+<div class="table table-responsive-sm clearfix">
+    <table class="table table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.UserRoles)
+                </th>
+                <th class="col-sm-4 text-right">
                 Commands
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            @foreach (var userrole in item.UserRoles)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
-                <td>
-
-                    @Html.DisplayFor(modelItem => userrole.Name)
-
-                </td>
+                <tr>
+                    <td class="col-sm-4">
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td class="col-sm-4">
+                        @foreach (var userrole in item.UserRoles)
+                        {
+                            @Html.DisplayFor(modelItem => userrole.Name);
+                        }
+                    </td>
+                    <td class="col-sm-2">
+                        <div class="btn-group btn-group-sm" data-toggle="buttons">
+                            <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.UserId">Edit</a>
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.UserId">Details</a>
+                            <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                        </div>
+                    </td>
+                </tr>
             }
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>

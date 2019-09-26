@@ -28,6 +28,7 @@ namespace WebCoreAppFramework.Controllers
         }
 
 
+
         
         public IActionResult Index()
         {
