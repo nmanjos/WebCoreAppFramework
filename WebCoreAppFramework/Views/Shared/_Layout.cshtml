@@ -42,7 +42,7 @@
 
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            @if (User.Claims.FirstOrDefault(c => c.Value == Permissions.AdminUser.Read) != null)
+                            @if (User.Claims.SingleOrDefault(x => x.Value == Permissions.AdminUser.Read) != null)  
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="UserAdmin" asp-action="Index">UserAdmin</a>
@@ -74,6 +74,7 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="https://kit.fontawesome.com/6a50034e45.js" crossorigin="anonymous"></script>
     </environment>
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -88,6 +89,7 @@
                 crossorigin="anonymous"
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
+        <script src="https://kit.fontawesome.com/6a50034e45.js" crossorigin="anonymous"></script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 

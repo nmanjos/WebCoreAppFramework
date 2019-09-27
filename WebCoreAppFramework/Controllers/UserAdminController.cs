@@ -39,7 +39,7 @@ namespace WebCoreAppFramework.Controllers
         }
 
 
-        public async Task<IActionResult> UserDetails(string Id)
+        public async Task<IActionResult> Details(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
             if (user != null)
