@@ -59,7 +59,7 @@ namespace WebCoreAppFramework
                  .AddUserManager<AppUserManager>()
                  .AddDefaultUI(UIFramework.Bootstrap4)
                  .AddDefaultTokenProviders();
-                 
+
 
             services.Configure<AppSetupOptions>(Configuration.GetSection("AppSetupOptions"));
             PermissionsSeeder.Initialize(services);
@@ -70,7 +70,7 @@ namespace WebCoreAppFramework
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IAppUserManager, AppUserManager>();
 
-            
+
         }
 
 
@@ -98,7 +98,7 @@ namespace WebCoreAppFramework
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-            app.UseCorrelationId( new CorrelationIdOptions
+            app.UseCorrelationId(new CorrelationIdOptions
             {
 
                 Header = "X-Correlation-ID",
@@ -111,6 +111,9 @@ namespace WebCoreAppFramework
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(
+                    name: "areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
 
             var options = new AppSetupOptions();

@@ -14,15 +14,15 @@ using WebCoreAppFramework.ViewModels;
 namespace WebCoreAppFramework.Controllers
 {
     [Authorize(Permissions.AdminUser.Read)]
-
-    public class UserAdminController : Controller
+    [Area("SiteAdmin")]
+    public class UserController : Controller
     {
         private readonly ILogger Logger;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ApplicationDbContext dbContext;
 
 
-        public UserAdminController(ApplicationDbContext context, ILogger<UserAdminController> logger, UserManager<ApplicationUser> UserManager)
+        public UserController(ApplicationDbContext context, ILogger<UserController> logger, UserManager<ApplicationUser> UserManager)
         {
             dbContext = context;
             Logger = logger;
