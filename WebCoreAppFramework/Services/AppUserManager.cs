@@ -50,6 +50,21 @@ namespace WebCoreAppFramework.Services
             }
 
         }
+        public async Task<IdentityResult> UpdateTenantAsync(ApplicationTenant Tenant)
+        {
+            try
+            {
+                DbContext.Tenants.Update(Tenant);
+                await DbContext.SaveChangesAsync();
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return IdentityResult.Failed(new IdentityError { Description = $"Unable to Update Tenant: {ex.Message}", Code = "UserUnUpdatable" }); ;
+            }
+        }
+
         public async Task<IdentityResult> CreateTenantAsync(string TenantName, ApplicationUser Manager)
         {
             

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebCoreAppFramework.Authorization;
 using WebCoreAppFramework.Data;
 using WebCoreAppFramework.Models;
+using WebCoreAppFramework.Services;
+using WebCoreAppFramework.ViewModels;
 
 namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
 {
@@ -18,10 +21,14 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
         : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly AppUserManager userManager;
+        private readonly ILogger logger;
 
-        public TenantsController(ApplicationDbContext context)
+        public TenantsController(ApplicationDbContext context, AppUserManager UserManager, ILogger<TenantsController> Logger)
         {
             _context = context;
+            userManager = UserManager;
+            logger = Logger;
         }
 
         // GET: SiteAdmin/ApplicationTenants
@@ -59,7 +66,7 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,LogoURL,EmailAddress,WebSite,PhoneContact,Visible,System")] ApplicationTenant applicationTenant)
+        public async Task<IActionResult> Create([Bind("Name,LogoURL,EmailAddress,WebSite,PhoneContact,Visible,System")] ApplicationTenant applicationTenant)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +90,19 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             {
                 return NotFound();
             }
-            return View(applicationTenant);
+            TenantViewModel tenant = new TenantViewModel
+            {
+                Id=applicationTenant.Id,
+                EmailAddress = applicationTenant.EmailAddress,
+                LogoURL = applicationTenant.LogoURL,
+                Name = applicationTenant.Name,
+                PhoneContact = applicationTenant.PhoneContact,
+                System = applicationTenant.System,
+                Visible = applicationTenant.Visible,
+                WebSite = applicationTenant.WebSite
+            };
+
+            return View(tenant);
         }
 
         // POST: SiteAdmin/Tenants/Edit/5
@@ -91,20 +110,31 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,LogoURL,EmailAddress,WebSite,PhoneContact,Visible,System")] ApplicationTenant applicationTenant)
+        public async Task<IActionResult> Edit(long id,  TenantViewModel Tenant)
         {
-            if (id != applicationTenant.Id)
+            if (id != Tenant.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                ApplicationTenant applicationTenant = _context.Tenants.Find(Tenant.Id);
                 try
                 {
-                    _context.Update(applicationTenant);
-                    await _context.SaveChangesAsync();
+                   
+                    applicationTenant.Name = Tenant.Name;
+                    applicationTenant.EmailAddress = Tenant.EmailAddress;
+                    applicationTenant.LogoURL = Tenant.LogoURL;
+                    applicationTenant.PhoneContact = Tenant.PhoneContact;
+                    applicationTenant.System = Tenant.System;
+                    applicationTenant.Visible = Tenant.Visible;
+                    applicationTenant.WebSite = Tenant.WebSite;
+                    await userManager.UpdateTenantAsync(applicationTenant);
+
                 }
+                   
+                
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ApplicationTenantExists(applicationTenant.Id))
@@ -118,7 +148,7 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(applicationTenant);
+            return View(Tenant);
         }
 
         // GET: SiteAdmin/Tenants/Delete/5
