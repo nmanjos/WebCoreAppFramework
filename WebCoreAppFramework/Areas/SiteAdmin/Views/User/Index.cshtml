@@ -21,7 +21,7 @@
                     @Html.DisplayNameFor(model => model.UserRoles)
                 </th>
                 <th class="col-sm-4 text-right">
-                Commands
+                    Commands
                 </th>
             </tr>
         </thead>
@@ -39,11 +39,11 @@
                         }
                     </td>
                     <td class="col-sm-2">
-                        
+
                         <div class="btn-group btn-group-sm">
-                            <a  asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-info fas fa-edit" role="button"></a>
-                            <a  asp-action="Details" asp-route-id="@item.UserId" class="btn btn-primary" role="button">Details</a>
-                            <a  asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-danger" role="button">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-info fas fa-edit" data-toggle="modal" data-target="#Edit" role="button"></a>
+                            <a asp-action="Details" asp-route-id="@item.UserId" class="btn btn-primary fas fa-info-circle" role="button"></a>
+                            <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-danger fas fa-trash-alt" role="button"></a>
                         </div>
                     </td>
                 </tr>
@@ -51,3 +51,6 @@
         </tbody>
     </table>
 </div>
+
+  
+

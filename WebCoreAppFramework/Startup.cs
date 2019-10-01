@@ -62,14 +62,14 @@ namespace WebCoreAppFramework
 
 
             services.Configure<AppSetupOptions>(Configuration.GetSection("AppSetupOptions"));
-            PermissionsSeeder.Initialize(services);
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.Configure<EmailConfiguration>(Configuration.GetSection("EmailConfiguration"));
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IAppUserManager, AppUserManager>();
-
+            PermissionsSeeder.Initialize(services);
 
         }
 

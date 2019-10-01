@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using WebCoreAppFramework.Authorization;
 using WebCoreAppFramework.Data;
 using WebCoreAppFramework.Models;
+using WebCoreAppFramework.ViewModels;
 
 namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
 {
@@ -74,7 +76,7 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             {
 
                 await RoleManager.CreateAsync(applicationRole);
-                
+
                 return RedirectToAction(nameof(Index));
             }
             return View(applicationRole);
@@ -112,13 +114,13 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             {
                 try
                 {
-                    var role =  await _context.Roles.FirstOrDefaultAsync(f => f.Id == id && !f.System );
+                    var role = await _context.Roles.FirstOrDefaultAsync(f => f.Id == id && !f.System);
                     if (role != null)
                     {
                         role.Visible = applicationRole.Visible;
                         role.System = applicationRole.System;
                         await _context.SaveChangesAsync();
-                        
+
                     }
                     else
                     {
@@ -169,13 +171,56 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             if (role != null)
             {
                 _context.Roles.Remove(role);
-               
+
                 await _context.SaveChangesAsync();
 
             }
             else
             {
-                return Forbid();
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AddClaims(string RoleId)
+        {
+            if (RoleId == null)
+            {
+                return NotFound();
+            }
+            RoleClaimsAddViewModel roleclaims = new RoleClaimsAddViewModel();
+            roleclaims.RoleId = RoleId;
+            foreach (var subPermission in typeof(Permissions).GetNestedTypes())
+            {
+                foreach (var field in subPermission.GetFields())
+                {
+                    string policy = field.GetValue(null).ToString();
+                    var rl = await RoleManager.FindByIdAsync(RoleId);
+                    if (rl != null)
+                    {
+                        bool active = (await RoleManager.GetClaimsAsync(rl)).Where(q => q.Value == policy) != null;
+                        roleclaims.List.Add(new RoleClaim { Claim = policy, Active = active });
+                    }
+                }
+            }
+            return View(roleclaims);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddClaims(RoleClaimsAddViewModel RoleClaims)
+        {
+            if (RoleClaims == null)
+            {
+                return NotFound();
+            }
+            ApplicationRole role = await RoleManager.FindByIdAsync(RoleClaims.RoleId);
+            if (role != null)
+            {
+                foreach (var item in RoleClaims.List.Where(q => q.Active = true))
+                {
+                    await RoleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, item.Claim));
+                }
             }
             return RedirectToAction(nameof(Index));
         }

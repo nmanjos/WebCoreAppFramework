@@ -1,63 +1,124 @@
 ﻿@model WebCoreAppFramework.ViewModels.UserDetailsViewModel
 
-@{
+@*@{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h4>Edit - @Model.UserName</h4>
 
-<h4>UserDetailsViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="LockoutEnd" class="control-label"></label>
-                <input asp-for="LockoutEnd" class="form-control" />
-                <span asp-validation-for="LockoutEnd" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="TwoFactorEnabled" /> @Html.DisplayNameFor(model => model.TwoFactorEnabled)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="PhoneNumberConfirmed" /> @Html.DisplayNameFor(model => model.PhoneNumberConfirmed)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="EmailConfirmed" /> @Html.DisplayNameFor(model => model.EmailConfirmed)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="LockoutEnabled" /> @Html.DisplayNameFor(model => model.LockoutEnabled)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="AccessFailedCount" class="control-label"></label>
-                <input asp-for="AccessFailedCount" class="form-control" />
-                <span asp-validation-for="AccessFailedCount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+<hr />*@
+
+
+<div class="modal fade" id="Edit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-area="SiteAdmin" asp-controller="User" asp-action="Edit">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cadastrar Novo Fornecedor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="TwoFactorEnabled" /><b>@Html.DisplayNameFor(model => model.TwoFactorEnabled)</b>
+                                </label>
+                            </div>
+                            <div class="col form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="PhoneNumberConfirmed" /> <b>@Html.DisplayNameFor(model => model.PhoneNumberConfirmed)</b>
+                                </label>
+                            </div>
+                            <div class="col form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="EmailConfirmed" /> <b>@Html.DisplayNameFor(model => model.EmailConfirmed)</b>
+                                </label>
+                            </div>
+                            <div class="col form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="LockoutEnabled" /> <b>@Html.DisplayNameFor(model => model.LockoutEnabled)</b>
+                                </label>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <b><label asp-for="LockoutEnd" class="col control-label"></label></b><text class="col">: @Model.LockoutEnd</text>
+
+
+                            <b><label asp-for="AccessFailedCount" class="col control-label"></label></b><text class="col">: @Model.AccessFailedCount</text>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fechar</button>
+                    <input type="submit" value="Salvar" class="btn btn-outline-success">
+                </div>
+
+            </form>
+        </div>
     </div>
 </div>
 
+
+@*<form asp-action="Edit">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="row">
+            <div class="col form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="TwoFactorEnabled" /><b>@Html.DisplayNameFor(model => model.TwoFactorEnabled)</b>
+                </label>
+            </div>
+            <div class="col form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PhoneNumberConfirmed" /> <b>@Html.DisplayNameFor(model => model.PhoneNumberConfirmed)</b>
+                </label>
+            </div>
+            <div class="col form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="EmailConfirmed" /> <b>@Html.DisplayNameFor(model => model.EmailConfirmed)</b>
+                </label>
+            </div>
+            <div class="col form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="LockoutEnabled" /> <b>@Html.DisplayNameFor(model => model.LockoutEnabled)</b>
+                </label>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <b><label asp-for="LockoutEnd" class="col control-label"></label></b><text class="col">: @Model.LockoutEnd</text>
+
+
+            <b><label asp-for="AccessFailedCount" class="col control-label"></label></b><text class="col">: @Model.AccessFailedCount</text>
+
+        </div>
+        <hr />
+        <div class="">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+        <hr />
+    </div>
+</form>
+
+
+
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
