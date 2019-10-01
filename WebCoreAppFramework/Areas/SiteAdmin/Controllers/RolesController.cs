@@ -158,6 +158,10 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             {
                 return NotFound();
             }
+            else if (applicationRole.System)
+            {
+                return Forbid();
+            }
 
             return View(applicationRole);
         }
@@ -182,44 +186,52 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> AddClaims(string RoleId)
+        public async Task<IActionResult> AddClaims(string Id)
         {
-            if (RoleId == null)
+            if (Id == null)
             {
                 return NotFound();
             }
-            RoleClaimsAddViewModel roleclaims = new RoleClaimsAddViewModel();
-            roleclaims.RoleId = RoleId;
+            List<RoleClaimViewModel> roleclaims = new List<RoleClaimViewModel>();
+            
             foreach (var subPermission in typeof(Permissions).GetNestedTypes())
             {
                 foreach (var field in subPermission.GetFields())
                 {
                     string policy = field.GetValue(null).ToString();
-                    var rl = await RoleManager.FindByIdAsync(RoleId);
+                    var rl = await RoleManager.FindByIdAsync(Id);
                     if (rl != null)
                     {
-                        bool active = (await RoleManager.GetClaimsAsync(rl)).Where(q => q.Value == policy) != null;
-                        roleclaims.List.Add(new RoleClaim { Claim = policy, Active = active });
+                      
+                        var cl = await RoleManager.GetClaimsAsync(rl);
+                        bool active = false;
+                        if (cl != null)
+                        {
+                            active = cl.Where(q => q.Value == policy).Any();
+                        }
+                        roleclaims.Add(new RoleClaimViewModel { RoleId =rl.Id, RoleName = rl.Name, Claim = policy, Active = active });
                     }
                 }
             }
             return View(roleclaims);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("AddClaims")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddClaims(RoleClaimsAddViewModel RoleClaims)
+        public async Task<IActionResult> AddClaimsConfirmed(List<RoleClaimViewModel> RoleClaims)
         {
             if (RoleClaims == null)
             {
                 return NotFound();
             }
-            ApplicationRole role = await RoleManager.FindByIdAsync(RoleClaims.RoleId);
+            ApplicationRole role = await RoleManager.FindByIdAsync(RoleClaims[0].RoleId);
             if (role != null)
             {
-                foreach (var item in RoleClaims.List.Where(q => q.Active = true))
+                foreach (var item in RoleClaims.Where(q => q.Active == true))
                 {
-                    await RoleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, item.Claim));
+                    // test if claim already exists, we cannot have duplicates !!!
+                    if(!(await RoleManager.GetClaimsAsync(role)).Where(q => q.Value == item.Claim).Any()) 
+                        await RoleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, item.Claim));
                 }
             }
             return RedirectToAction(nameof(Index));

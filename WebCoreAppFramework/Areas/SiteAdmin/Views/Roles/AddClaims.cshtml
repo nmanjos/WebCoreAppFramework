@@ -1,0 +1,50 @@
+﻿@model List<WebCoreAppFramework.ViewModels.RoleClaimViewModel>
+
+@{
+    ViewData["Title"] = "AddClaims";
+}
+
+<h4>AddClaims to Role @Model[0].RoleName </h4>
+<form asp-action="AddClaims">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    
+                    @Html.DisplayNameFor(model => model[0].Claim)
+
+
+                </th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; ++i)
+            {
+
+                <tr>
+
+                    <td>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                @Html.HiddenFor(item => item[i].RoleId)
+                                @Html.HiddenFor(item => item[i].Claim)
+                                @Html.HiddenFor(item => item[i].RoleName)
+                                @Html.EditorFor(item => item[i].Active)
+                                @Html.DisplayFor(item => item[i].Claim)
+
+                            </label>
+                        </div>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>

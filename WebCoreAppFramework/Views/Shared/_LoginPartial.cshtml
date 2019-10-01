@@ -6,7 +6,7 @@
     <ul class="navbar-nav">
         @if (SignInManager.IsSignedIn(User))
         {
-
+          
             @if (User.Claims.SingleOrDefault(x => x.Value == Permissions.AdminUser.Read) != null)
             {
                 <li class="nav-item dropdown">

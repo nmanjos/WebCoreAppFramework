@@ -13,6 +13,20 @@
     <Compile Remove="Migrations\20190919141629_UpdatedEntities.Designer.cs" />
     <Compile Remove="Migrations\20190920155306_NewEntities.cs" />
     <Compile Remove="Migrations\20190920155306_NewEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190920155715_NewEntities.cs" />
+    <Compile Remove="Migrations\20190920155715_NewEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190923142434_UserSessionClass.cs" />
+    <Compile Remove="Migrations\20190923142434_UserSessionClass.Designer.cs" />
+    <Compile Remove="Migrations\20190923142829_UserSessionClass1.cs" />
+    <Compile Remove="Migrations\20190923142829_UserSessionClass1.Designer.cs" />
+    <Compile Remove="Migrations\20190926110431_CorrectEntities.cs" />
+    <Compile Remove="Migrations\20190926110431_CorrectEntities.Designer.cs" />
+    <Compile Remove="Migrations\20190926115549_CorrectEntities1.cs" />
+    <Compile Remove="Migrations\20190926115549_CorrectEntities1.Designer.cs" />
+    <Compile Remove="Migrations\20190927105655_VisibleSystemFields2RelevantEntities.cs" />
+    <Compile Remove="Migrations\20190927105655_VisibleSystemFields2RelevantEntities.Designer.cs" />
+    <Compile Remove="Migrations\20191001153527_new entities.cs" />
+    <Compile Remove="Migrations\20191001153527_new entities.Designer.cs" />
   </ItemGroup>
 
 
@@ -33,6 +47,7 @@
   <ItemGroup>
     <Folder Include="Areas\SiteAdmin\Data\" />
     <Folder Include="Areas\SiteAdmin\Models\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
