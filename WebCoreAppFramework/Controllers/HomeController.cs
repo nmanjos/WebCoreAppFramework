@@ -3,19 +3,47 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MVCEmailService.ViewModels;
+using WebCoreAppFramework.Data;
 using WebCoreAppFramework.Models;
+using WebCoreAppFramework.Services;
+using WebCoreAppFramework.ViewModels;
 
 namespace WebCoreAppFramework.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger Logger;
+        private readonly AppUserManager userManager;
+        private readonly ApplicationDbContext dbContext;
+
+        public HomeController(ApplicationDbContext context, ILogger<UserController> logger, AppUserManager UserManager)
+        {
+            dbContext = context;
+            Logger = logger;
+            userManager = UserManager;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
+        public async Task<JsonResult> SetLocation(GeoLocationViewModel geoLocation)
+        {
+            bool result = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var UserName = User.Identity.Name;
+                result = await userManager.SetCurrentUserLocation(UserName, geoLocation.latitude, geoLocation.longitude);
+            }
+            
+            
+            return Json(geoLocation);
+        }
         public IActionResult About()
         {
             List<HomeAboutViewModel> Model = new List<HomeAboutViewModel>();

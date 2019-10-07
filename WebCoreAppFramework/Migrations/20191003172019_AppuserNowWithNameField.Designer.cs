@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCoreAppFramework.Data;
 
 namespace WebCoreAppFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191003172019_AppuserNowWithNameField")]
+    partial class AppuserNowWithNameField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,7 +338,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("CountryLanguages");
+                    b.ToTable("CountryLanguage");
                 });
 
             modelBuilder.Entity("WebCoreAppFramework.Models.County", b =>
@@ -344,8 +346,6 @@ namespace WebCoreAppFramework.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long?>("CountryId");
 
                     b.Property<long?>("DistrictId");
 
@@ -357,8 +357,6 @@ namespace WebCoreAppFramework.Migrations
                     b.Property<bool>("Visible");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.HasIndex("DistrictId");
 
@@ -380,7 +378,7 @@ namespace WebCoreAppFramework.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("UserSessions");
+                    b.ToTable("CurrentUserSession");
                 });
 
             modelBuilder.Entity("WebCoreAppFramework.Models.District", b =>
@@ -411,23 +409,15 @@ namespace WebCoreAppFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CountryId");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
-
-                    b.Property<string>("Name");
 
                     b.Property<bool>("System");
 
                     b.Property<bool>("Visible");
 
-                    b.Property<bool>("isCity");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.ToTable("GeoLocations");
                 });
@@ -596,10 +586,6 @@ namespace WebCoreAppFramework.Migrations
 
             modelBuilder.Entity("WebCoreAppFramework.Models.County", b =>
                 {
-                    b.HasOne("WebCoreAppFramework.Models.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
                     b.HasOne("WebCoreAppFramework.Models.District", "District")
                         .WithMany("Counties")
                         .HasForeignKey("DistrictId");
@@ -621,13 +607,6 @@ namespace WebCoreAppFramework.Migrations
                 {
                     b.HasOne("WebCoreAppFramework.Models.Country", "Country")
                         .WithMany("Districts")
-                        .HasForeignKey("CountryId");
-                });
-
-            modelBuilder.Entity("WebCoreAppFramework.Models.GeoLocation", b =>
-                {
-                    b.HasOne("WebCoreAppFramework.Models.Country", "Country")
-                        .WithMany()
                         .HasForeignKey("CountryId");
                 });
 

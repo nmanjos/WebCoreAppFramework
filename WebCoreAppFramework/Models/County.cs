@@ -12,6 +12,7 @@ namespace WebCoreAppFramework.Models
         [Required]
         public string Name { get; set; }
         public District District { get; set; }
+        public Country Country { get; set; }
         public ICollection<Address> Addresses { get; set; }
 
         public bool Visible { get; set; } = true; // to maitain integrity Delete actions do not Delete, they set this field to false 

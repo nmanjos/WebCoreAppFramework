@@ -62,7 +62,25 @@ namespace WebCoreAppFramework.Controllers
             }
             return NotFound();
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+            
+            if (user != null)
+            {
+                await dbContext.Entry(user).Collection(c => c.UserRoles).LoadAsync();
+            }
+                return View(user);
+        }
 
+        /// <summary>
+        /// Edit user Data if it not a System User
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="applicationUser"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(string Id, [Bind("TwoFactorEnabled,PhoneNumberConfirmed,Id,EmailConfirmed,LockoutEnabled")] ApplicationUser applicationUser)
         {
             if (Id != applicationUser.Id)
@@ -71,7 +89,7 @@ namespace WebCoreAppFramework.Controllers
             }
             
             var user = await userManager.FindByIdAsync(Id);
-            if (user != null)
+            if (user != null && !user.System)
             {
                 user.TwoFactorEnabled = applicationUser.TwoFactorEnabled;
                 user.PhoneNumberConfirmed = applicationUser.PhoneNumberConfirmed;
@@ -122,12 +140,6 @@ namespace WebCoreAppFramework.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromBody] UserDetailsViewModel UserDetails)
-        {
-            var usr = UserDetails.UserName;
-            return Ok();
-        }
+        
     }
 }

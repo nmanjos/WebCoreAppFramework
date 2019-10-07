@@ -19,13 +19,13 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private AppUserManager userMAnager;
+        private AppUserManager userManager;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager, AppUserManager UserMAnager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
-            userMAnager = UserMAnager;
+            userManager = UserMAnager;
         }
 
         [BindProperty]
@@ -86,8 +86,10 @@ namespace WebCoreAppFramework.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    
                     _logger.LogInformation("User logged in.");
+                    var user = await userManager.SetCurrentSession(Input.Email, userManager.GetDefaultTenantName());
+                    
+                    var userroles =  user.UserRoles.GroupBy(g => g.TenantId);
                     
                     return LocalRedirect(returnUrl);
                 }

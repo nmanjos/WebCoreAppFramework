@@ -45,8 +45,7 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
                 return NotFound();
             }
 
-            var applicationTenant = await _context.Tenants
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var applicationTenant = await _context.Tenants.Include("Users").Include("Manager").FirstOrDefaultAsync(m => m.Id == id);
             if (applicationTenant == null)
             {
                 return NotFound();
@@ -55,8 +54,19 @@ namespace WebCoreAppFramework.Areas.SiteAdmin.Controllers
             return View(applicationTenant);
         }
 
-        // GET: SiteAdmin/ApplicationTenants/Create
-        public IActionResult Create()
+        //List Users of this Tennant
+        public async Task<IActionResult> TenantUsers(long? id)
+        {
+            IQueryable<ApplicationUser> Users = null;
+            if (id != null)
+            {
+                Users = userManager.FindByTenantId(id);
+            }
+           
+            return View(Users);
+        }
+            // GET: SiteAdmin/ApplicationTenants/Create
+            public IActionResult Create()
         {
             return View();
         }

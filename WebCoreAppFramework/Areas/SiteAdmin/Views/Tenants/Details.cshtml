@@ -4,57 +4,147 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>ApplicationTenant</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LogoURL)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LogoURL)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmailAddress)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.WebSite)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.WebSite)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneContact)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneContact)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Visible)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Visible)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.System)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.System)
-        </dd>
-    </dl>
+<div class="col-sm-12">
+    <div class="float-sm-left">
+        <h4>Details of Tenant -> @Model.Name</h4>
+    </div>
+    <div class="float-sm-right">
+        <a class="nav-link btn btn-primary" asp-action="Index" role="button">Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<br />
+<br />
+<div class="col-sm-12">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Main" role="tab" aria-controls="home" aria-selected="true">Main</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#RoleUsers" role="tab" aria-controls="profile" aria-selected="false">Roles / Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#Manager" role="tab" aria-controls="contact" aria-selected="false">Manager</a>
+        </li>
+
+        <li class="nav-item">
+
+        </li>
+
+    </ul>
+    <div class="tab-content border border-dark" id="myTabContent">
+        <div class="tab-pane fade show active" id="Main" role="tabpanel" aria-labelledby="home-tab">
+            <dl class="row col-sm-12">
+
+                <dt class="col-sm-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.LogoURL)
+                    </div>
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.LogoURL)
+                </dd>
+                <dt class="col-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.EmailAddress)
+                    </div>
+
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EmailAddress)
+                </dd>
+                <dt class="col-sm-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.WebSite)
+                    </div>
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.WebSite)
+                </dd>
+                <dt class="col-sm-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.PhoneContact)
+                    </div>
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PhoneContact)
+                </dd>
+                <dt class="col-sm-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.Visible)
+                    </div>
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Visible)
+                </dd>
+                <dt class="col-sm-2">
+                    <div class="float-sm-right">
+                        @Html.DisplayNameFor(model => model.System)
+                    </div>
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.System)
+                </dd>
+            </dl>
+            <div class="float-sm-right">
+
+                <a class="nav-link btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id" role="button">Edit</a>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="RoleUsers" role="tabpanel" aria-labelledby="profile-tab">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            User Role
+                        </th>
+                        <th>
+                            UserName
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Users)
+                    {
+                        <tr>
+                            <td>
+                                @item.Role.Name
+                            </td>
+                            <td>
+                                @item.User.UserName
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+
+        </div>
+        <div class="tab-pane fade" id="Manager" role="tabpanel" aria-labelledby="contact-tab">
+            <table class="table">
+                <thead>
+                    <tr>
+
+                        <th>
+                            Manager UserName
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @Model.Manager.UserName
+                        <td>
+                            @Model.Manager.Email
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 </div>

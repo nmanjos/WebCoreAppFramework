@@ -34,6 +34,41 @@ namespace WebCoreAppFramework.Services
             logger.LogInformation("AppUserManager Initialized");
         }
 
+
+        public string GetDefaultTenantName()
+        {
+            return AppOptions.DefaultTenantName;
+        }
+
+        public async Task<bool> SetCurrentUserLocation(string UserName, double latitude, double longitude)
+        {
+            bool result = false;
+            try
+            {
+                
+                var user = await base.FindByNameAsync(UserName);
+                if (user.CurrentSession == null) user.CurrentSession = new CurrentUserSession();
+
+                if (user.CurrentSession.GeoLocation == null) user.CurrentSession.GeoLocation = new GeoLocation();
+                user.CurrentSession.GeoLocation.Latitude = latitude;
+                user.CurrentSession.GeoLocation.Longitude = longitude;
+                await this.UpdateAsync(user);
+            }
+            catch (Exception ex)
+            {
+
+                Logger.LogError(ex.Message);
+            }
+            
+
+            return result;
+        }
+
+        /// <summary>
+        /// Find Tenant by name
+        /// </summary>
+        /// <param name="TenantName"></param>
+        /// <returns></returns>
         public ApplicationTenant FindTenantByName(string TenantName)
         {
             try
@@ -50,6 +85,16 @@ namespace WebCoreAppFramework.Services
             }
 
         }
+
+        public IQueryable<ApplicationUser>  FindByTenantId(long? Id)
+        {
+            if (Id != null)
+            {
+                return (DbContext.UserRoles.Where(q => q.TenantId == Id)).Select(s => s.User);
+            }
+            return null;
+        }
+
         public async Task<IdentityResult> UpdateTenantAsync(ApplicationTenant Tenant)
         {
             try
@@ -65,6 +110,12 @@ namespace WebCoreAppFramework.Services
             }
         }
 
+        /// <summary>
+        /// Create Tenant, Manager user must exist so it can be added to Tenant
+        /// </summary>
+        /// <param name="TenantName" type="string"></param>
+        /// <param name="Manager" type="ApplicationUser"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> CreateTenantAsync(string TenantName, ApplicationUser Manager)
         {
             
@@ -121,18 +172,39 @@ namespace WebCoreAppFramework.Services
 
             }
         }
-
-        public async Task<IdentityResult> SetCurrentSession(string email, string tenantName)
+        /// <summary>
+        /// Sets Current User session 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="tenantName"></param>
+        /// <returns></returns>
+        public async Task<ApplicationUser> SetCurrentSession(string email, string tenantName)
         {
-            var user = await base.FindByEmailAsync(email);
+
+            var user = DbContext.Users.Find((await base.FindByEmailAsync(email)).Id);
             var tenant = FindTenantByName(tenantName);
             if (tenant != null)
             {
-                user.CurrentSession.Tenant = tenant;
-                return IdentityResult.Success;
+                CurrentUserSession currentUserSession = user.CurrentSession;
+                if (currentUserSession == null)
+                {
+                    currentUserSession = new CurrentUserSession();
+                }
+                currentUserSession.Tenant = tenant;
+                user.CurrentSession = currentUserSession;
+                await base.UpdateAsync(user);
+                await DbContext.Entry(user).Collection(p => p.UserRoles).LoadAsync();
+                await DbContext.Entry(user).Collection(p => p.Claims).LoadAsync();
+                this.UpdateAsync(user);
+                return user;
             }
 
-            return IdentityResult.Failed(new IdentityError { Code = "TenantNotFound", Description = "Tenant not found" });
+            return null;
+        }
+
+        Task<IdentityResult> IAppUserManager.SetCurrentSession(string email, string tenantName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

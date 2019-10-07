@@ -2,7 +2,59 @@
     ViewData["Title"] = "Home Page";
 }
 
+
+@section Scripts {
+    <script>
+
+
+        function sendLocation() {
+            if (Modernizr.geolocation) {
+                navigator.geolocation.getCurrentPosition(currentPosition, positionError);
+            } else {
+                error.html("GeoLocation API of HTML 5 is not supported");
+            }
+        }
+
+        function currentPosition(currentPos) {
+
+            var url = "/Home/SetLocation";
+            var pos = currentPos.coords;
+            var coordinates = {
+                longitude: pos.longitude,
+                latitude: pos.latitude
+            }
+
+            $.post(url, coordinates, function (data) {
+
+            });
+        }
+
+        function positionError(errCode) {
+            switch (errCode.code) {
+                case 0:
+                    error.html("Unknown Error - has occured");
+                    break;
+                case 1:
+                    error.html("Permission Denied - By the user");
+                    break;
+                case 2:
+                    error.html("Position/Location Unavailable");
+                    break;
+                case 3:
+                    error.html("Timeout");
+                    break;
+            }
+        }
+
+    </script>
+}
+
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <img id="logoImage" src="https://www.w3schools.com/jsref/w3javascript.gif" onload="sendLocation()" width="100" height="132">
 </div>
+
+
+
+

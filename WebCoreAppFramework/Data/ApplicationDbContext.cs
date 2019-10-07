@@ -98,6 +98,12 @@ namespace WebCoreAppFramework.Data
         public DbSet<District> Districs { get; set; }
         public DbSet<County> Counties { get; set; }
         public DbSet<Language> Languages { get; set; }
+
+        public DbSet<CurrentUserSession> UserSessions { get; set; }
+        public DbSet<CountryLanguage> CountryLanguages { get; set; }
+        
+
+        
         //public DbSet<WebCoreAppFramework.ViewModels.UserIndexViewModel> UserIndexViewModel { get; set; }
         //public DbSet<WebCoreAppFramework.ViewModels.UserDetailsViewModel> UserDetailsViewModel { get; set; }
 

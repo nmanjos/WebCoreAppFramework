@@ -79,4 +79,31 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+
+    <script type="text/javascript">
+            $('#Country').change(function () {
+                var selectedCountry = $("#Country").val();
+                var regionsSelect = $('#Region');
+                regionsSelect.empty();
+                if (selectedCountry != null && selectedCountry != '') {
+                    $.getJSON('@Url.Action("GetRegions")', { iso3: selectedCountry }, function (regions) {
+                        if (regions != null && !jQuery.isEmptyObject(regions))
+                        {
+                            regionsSelect.append($('<option/>', {
+                                value: null,
+                                text: ""
+                            }));
+                            $.each(regions, function (index, region) {
+                                regionsSelect.append($('<option/>', {
+                                    value: region.Value,
+                                    text: region.Text
+                                }));
+                            });
+                        };
+                    });
+                }
+            });
+    </script>
 }
+

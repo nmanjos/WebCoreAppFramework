@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCoreAppFramework.Data;
 
 namespace WebCoreAppFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191005085606_UpdatedGeoLocation")]
+    partial class UpdatedGeoLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -411,8 +413,6 @@ namespace WebCoreAppFramework.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CountryId");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
@@ -426,8 +426,6 @@ namespace WebCoreAppFramework.Migrations
                     b.Property<bool>("isCity");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.ToTable("GeoLocations");
                 });
@@ -621,13 +619,6 @@ namespace WebCoreAppFramework.Migrations
                 {
                     b.HasOne("WebCoreAppFramework.Models.Country", "Country")
                         .WithMany("Districts")
-                        .HasForeignKey("CountryId");
-                });
-
-            modelBuilder.Entity("WebCoreAppFramework.Models.GeoLocation", b =>
-                {
-                    b.HasOne("WebCoreAppFramework.Models.Country", "Country")
-                        .WithMany()
                         .HasForeignKey("CountryId");
                 });
 
